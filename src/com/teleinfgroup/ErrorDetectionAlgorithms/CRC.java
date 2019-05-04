@@ -7,9 +7,9 @@ public class CRC extends ErrorDetectionAlgorithm {
     private int polynomial;
     private int keyLength;
 
-    public CRC(int polynomial, int keyLength) {
-        this.polynomial = polynomial;
-        this.keyLength = keyLength;
+    public CRC(CRCTypes type) {
+        this.polynomial = type.getPolynomial();
+        this.keyLength = type.getKeyLength();
     }
 
     public Integer getPolynomial() {
@@ -30,17 +30,17 @@ public class CRC extends ErrorDetectionAlgorithm {
 
 
     @Override
-    public int encodeMsg( String blok) {
+    public int encodeMsg( String text) {
         if(polynomial>0 && keyLength>0 && polynomial<32 && keyLength<32){
             return -1;
         }else
-        return computeCRC( blok );
+        return computeCRC( text );
     }
 
-    private int computeCRC(String blok){
+    private int computeCRC(String text){
         int a = 0, b;
-        for (int i=0; i < blok.length(); i++) {
-            b = blok.charAt(i) << 24;
+        for (int i=0; i < text.length(); i++) {
+            b = text.charAt(i) << 24;
             for (int j = 8;j>0; j-- ) {
 
                 if (((a^b) & (1<<31))>>>31==1) {
