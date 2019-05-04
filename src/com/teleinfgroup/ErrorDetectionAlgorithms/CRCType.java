@@ -1,11 +1,11 @@
 package com.teleinfgroup.ErrorDetectionAlgorithms;
 
-public class CRCTypes {
+public class CRCType {
     private String nazwa;
     private int polynomial;
     private int keyLength;
 
-    public CRCTypes(String nazwa, int polynomial, int keyLength) {
+    public CRCType(String nazwa, int polynomial, int keyLength) {
         this.nazwa = nazwa;
         this.polynomial = polynomial;
         this.keyLength = keyLength;
