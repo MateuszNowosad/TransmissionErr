@@ -7,9 +7,9 @@ public class CRC extends ErrorDetectionAlgorithm {
     private int polynomial;
     private int keyLength;
 
-    public CRC(CRCTypes type) {
-        this.polynomial = type.getPolynomial();
+    public CRC(CRCType type) {
         this.keyLength = type.getKeyLength();
+        this.polynomial = type.getPolynomial()<<(32-keyLength);
     }
 
     public Integer getPolynomial() {
