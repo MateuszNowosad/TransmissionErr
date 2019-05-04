@@ -31,7 +31,7 @@ public class CRC extends ErrorDetectionAlgorithm {
 
     @Override
     public int encodeMsg( String text) {
-        if(polynomial>0 && keyLength>0 && polynomial<32 && keyLength<32){
+        if(polynomial==-1 || keyLength<=0 || keyLength>32){
             return -1;
         }else
         return computeCRC( text );
