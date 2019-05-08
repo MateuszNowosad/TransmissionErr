@@ -1,6 +1,8 @@
 package com.teleinfgroup.ErrorDetectionAlgorithms;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CRC extends ErrorDetectionAlgorithm {
 
@@ -29,12 +31,19 @@ public class CRC extends ErrorDetectionAlgorithm {
     }
 
     @Override
-    public String encodeMsg(String text) {
+    public void encodeMsg(Message message) {
+        Map<Integer, Byte> redundantData =new HashMap<>();
+        String text = message.getMessageInBinary(8);
         if (polynomial == -1 || keyLength <= 0 || keyLength > 32) {
-            return null;
         } else {
             String result = Integer.toBinaryString(computeCRC(text));
-            return text + "0".repeat(keyLength-result.length()) + result;
+            result = "0".repeat(keyLength-result.length()).concat(result);
+            int i=text.length();
+            for (char ch : result.toCharArray()){
+                redundantData.put(i++,(byte) Integer.parseInt(String.valueOf(ch)));
+            }
+            message.setRedundantData(redundantData);
+            message.setEncodedMessage(text + result);
         }
     }
 
