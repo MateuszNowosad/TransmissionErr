@@ -46,9 +46,7 @@ public class CRC extends ErrorDetectionAlgorithm {
         if (polynomial == -1 || keyLength <= 0 || keyLength > 32) {
             return null;
         } else {
-            StringBuilder encodedMsg = stringToBinary(text);
-            encodedMsg.append(Integer.toHexString(computeCRC(text)));
-            return encodedMsg.toString();
+            return text + Integer.toHexString(computeCRC(text));
         }
     }
 

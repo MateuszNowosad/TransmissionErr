@@ -22,7 +22,7 @@ public class ParityControl extends ErrorDetectionAlgorithm {
         boolean[] parityBits = new boolean[text.length()];
         int character;
 
-        StringBuilder encodedMsg = stringToBinary(text);
+        StringBuilder encodedMsg = new StringBuilder(text);
 
         for (int i = 0; i < text.length(); i++) {
             character = text.charAt(i);
