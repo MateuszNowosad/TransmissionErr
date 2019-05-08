@@ -26,13 +26,10 @@ public class Main {
         Message message = new Message("ab", false);
         Message messageBinary = new Message("1011", true);
         /**
-         * Wywołanie dla stringa ascii
-         * ErrorDetectionAlgorithm test = new Hamming74();
-         * System.out.println(hamming74.encodeMsg(correctBinaryLength(4,stringToBinary("ab"))));
-         *
-         * Wywołanie dla stringa binarnego
-         * ErrorDetectionAlgorithm test = new Hamming74();
-         * System.out.println(hamming74.encodeMsg(correctBinaryLength(4,"101")));
+         * Example usag
+         * Message message = new Message("ab", false);
+         * ErrorDetectionAlgorithm hamming = new Hamming74();
+         * System.out.println("Hamming74 for ab: "+message.getEncodedMessage());
          */
         ErrorDetectionAlgorithm hamming74 = new Hamming74();
         hamming74.encodeMsg(message);
