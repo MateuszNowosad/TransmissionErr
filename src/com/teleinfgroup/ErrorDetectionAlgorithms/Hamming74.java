@@ -1,6 +1,8 @@
 package com.teleinfgroup.ErrorDetectionAlgorithms;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Hamming74 extends ErrorDetectionAlgorithm {
 
@@ -38,13 +40,21 @@ public class Hamming74 extends ErrorDetectionAlgorithm {
     }
 
     @Override
-    public String encodeMsg(String text) {
+    public void encodeMsg(Message message) {
+        String text = message.getMessageInBinary(4);
+        Map<Integer, Byte> redundantData =new HashMap<>();
         StringBuilder result = new StringBuilder();
         for(int i =0;i<text.length();i+=4){
-
-            result.append(computeHamming74(text.substring(i,i+4)));
+            String hammingCodeForBlock= computeHamming74(text.substring(i,i+4));
+            result.append(hammingCodeForBlock);
         }
-        return result.toString();
+        for(int i =0;i<result.length();i+=7){
+            redundantData.put(i+3,(byte) Integer.parseInt(String.valueOf(result.charAt(i+3))));
+            redundantData.put(i+5,(byte) Integer.parseInt(String.valueOf(result.charAt(i+5))));
+            redundantData.put(i+6,(byte) Integer.parseInt(String.valueOf(result.charAt(i+6))));
+        }
+
+        message.setEncodedMessage(result.toString());
     }
 
     @Override
