@@ -4,19 +4,6 @@ import java.util.ArrayList;
 
 public class Hamming74 extends ErrorDetectionAlgorithm {
 
-    private StringBuilder stringToBinary(String text) {
-        byte[] bytes = text.getBytes();
-        StringBuilder binary = new StringBuilder();
-        for (byte b : bytes) {
-            int val = b;
-            for (int i = 0; i < 8; i++) {
-                binary.append((val & 128) == 0 ? 0 : 1);
-                val <<= 1;
-            }
-        }
-        return binary;
-    }
-
     private int calculateControlBits(String text) {
         int controlBitsAmount = 0, textLength = text.length();
         while (!(textLength + controlBitsAmount + 1 <= Math.pow(2, controlBitsAmount))) {
@@ -52,15 +39,10 @@ public class Hamming74 extends ErrorDetectionAlgorithm {
 
     @Override
     public String encodeMsg(String text) {
-        String binaryText = stringToBinary(text).toString();
-        int validBlockLength = binaryText.length() % 4;
-        if(validBlockLength!=0){
-            binaryText= "0".repeat(validBlockLength).concat(binaryText);
-        }
         StringBuilder result = new StringBuilder();
-        for(int i =0;i<binaryText.length();i+=4){
+        for(int i =0;i<text.length();i+=4){
 
-            result.append(computeHamming74(binaryText.substring(i,i+4)).concat(" "));
+            result.append(computeHamming74(text.substring(i,i+4)));
         }
         return result.toString();
     }

@@ -28,32 +28,20 @@ public class CRC extends ErrorDetectionAlgorithm {
         this.keyLength = keyLength;
     }
 
-    private StringBuilder stringToBinary(String text) {
-        byte[] bytes = text.getBytes();
-        StringBuilder binary = new StringBuilder();
-        for (byte b : bytes) {
-            int val = b;
-            for (int i = 0; i < 8; i++) {
-                binary.append((val & 128) == 0 ? 0 : 1);
-                val <<= 1;
-            }
-        }
-        return binary;
-    }
-
     @Override
     public String encodeMsg(String text) {
         if (polynomial == -1 || keyLength <= 0 || keyLength > 32) {
             return null;
         } else {
-            return text + Integer.toHexString(computeCRC(text));
+            String result = Integer.toBinaryString(computeCRC(text));
+            return text + "0".repeat(keyLength-result.length()) + result;
         }
     }
 
     private int computeCRC(String text) {
         int a = 0, b;
-        for (int i = 0; i < text.length(); i++) {
-            b = text.charAt(i) << 24;
+        for (int i = 0; i < text.length(); i+=8) {
+            b = Integer.parseInt(text.substring(i, i+8),2) << 24;
             for (int j = 8; j > 0; j--) {
 
                 if (((a ^ b) & (1 << 31)) >>> 31 == 1) {
