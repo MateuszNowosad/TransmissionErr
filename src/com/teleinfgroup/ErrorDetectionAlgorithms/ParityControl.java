@@ -24,6 +24,7 @@ public class ParityControl extends ErrorDetectionAlgorithm {
             encodedMsg.insert(offset, parityBits[i] ? '0' : '1'); //position bits
             redundantData.put(offset, parityBits[i] ? (byte)0 : (byte)1);
         }
+        message.setRedundantData(redundantData);
         message.setEncodedMessage(encodedMsg.toString()); //encoded
     }
 

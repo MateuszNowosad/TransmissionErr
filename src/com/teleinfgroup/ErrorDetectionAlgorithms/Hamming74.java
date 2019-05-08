@@ -53,7 +53,7 @@ public class Hamming74 extends ErrorDetectionAlgorithm {
             redundantData.put(i+5,(byte) Integer.parseInt(String.valueOf(result.charAt(i+5))));
             redundantData.put(i+6,(byte) Integer.parseInt(String.valueOf(result.charAt(i+6))));
         }
-
+        message.setRedundantData(redundantData);
         message.setEncodedMessage(result.toString());
     }
 
