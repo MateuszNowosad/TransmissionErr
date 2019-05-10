@@ -28,7 +28,7 @@ public class MainView {
 
     private static JFrame frame;
     private JPanel mainJPanel;
-    private JTextField messageTextField;
+    private JTextArea messageTextField;
     private JButton encode;
     private JRadioButton ASCI;
     private JRadioButton binary;
@@ -171,17 +171,19 @@ public class MainView {
                 } else {
                     message.sendMessage();
                 }
+                decodeMessage();
 
                 String sentMessageSt = message.getSentMessage();
-                disturbedMessage.setText("");
-                int signLength = frame.getWidth() - frame.getWidth()/4;
-                int first = 0, last = signLength;
-                while(last < sentMessageSt.length()){
-                    disturbedMessage.append(sentMessageSt.substring(first, last) + "\n");
-                    first += signLength;
-                    last += signLength;
-                }
-                disturbedMessage.append(sentMessageSt.substring(first) + "\n");
+                disturbedMessage.setText(sentMessageSt);
+                correctedMessage.setText(correctBits());
+//                int signLength = frame.getWidth() - frame.getWidth()/4;
+//                int first = 0, last = signLength;
+//                while(last < sentMessageSt.length()){
+//                    disturbedMessage.append(sentMessageSt.substring(first, last) + "\n");
+//                    first += signLength;
+//                    last += signLength;
+//                }
+//                disturbedMessage.append(sentMessageSt.substring(first) + "\n");
 
             } catch (NumberFormatException ex) {
 
@@ -223,6 +225,32 @@ public class MainView {
                 encodedMessage.setText("Error: set message lenght!");
             }
         });
+    }
+
+    private String correctBits(){
+        String encodedMessage = message.getEncodedMessage();
+        StringBuilder stringBuilder = new StringBuilder(encodedMessage);
+        for (int i:message.getErrorsPosition()) {
+            //stringBuilder
+        }
+        return stringBuilder.toString();
+    }
+
+    private void decodeMessage(){
+        switch (chosenAlgorithm){
+            case "Hamming74":
+                ErrorDetectionAlgorithm hamming74 = new Hamming74();
+                hamming74.decodeMsg(message);
+                break;
+            case "ParityControl":
+                ErrorDetectionAlgorithm Parity = new ParityControl();
+                Parity.decodeMsg(message);
+                break;
+            default:
+                ErrorDetectionAlgorithm CRC16 = new CRC(CRCTypes.get(chosenAlgorithm));
+                CRC16.decodeMsg(message);
+                break;
+        }
     }
 
     private String generateMessage(int messageLenght, boolean ifBinary) {
@@ -275,6 +303,8 @@ public class MainView {
         frame.setContentPane(new MainView().mainJPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
+        frame.setMinimumSize(new Dimension(650, 600));
+        frame.setPreferredSize(new Dimension(650, 600));
         frame.setVisible(true);
         frame.setResizable(true);
     }
