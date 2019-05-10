@@ -32,25 +32,45 @@ public class CRC extends ErrorDetectionAlgorithm {
 
     @Override
     public void encodeMsg(Message message) {
-        Map<Integer, Byte> redundantData =new HashMap<>();
+        Map<Integer, Byte> redundantData = new HashMap<>();
         String text = message.getMessageInBinary(8);
         if (polynomial == -1 || keyLength <= 0 || keyLength > 32) {
         } else {
             String result = Integer.toBinaryString(computeCRC(text));
-            result = "0".repeat(keyLength-result.length()).concat(result);
-            int i=text.length();
-            for (char ch : result.toCharArray()){
-                redundantData.put(i++,(byte) Integer.parseInt(String.valueOf(ch)));
+            result = "0".repeat(keyLength - result.length()).concat(result);
+            int i = text.length();
+            for (char ch : result.toCharArray()) {
+                redundantData.put(i++, (byte) Integer.parseInt(String.valueOf(ch)));
             }
             message.setRedundantData(redundantData);
             message.setEncodedMessage(text + result);
         }
     }
 
+    @Override
+    public void decodeMsg(Message message) {
+        ArrayList<Integer> errorPosition = new ArrayList<>();
+
+        StringBuilder sentMsg = new StringBuilder(message.getSentMessage());
+        message.setDecodedMessage(sentMsg.substring(0, sentMsg.length() - keyLength));
+
+        String sentMsgCRC = sentMsg.substring(sentMsg.length() - keyLength);
+        String decodedMessageCRC = Integer.toBinaryString(computeCRC(message.getDecodedMessage()));
+        decodedMessageCRC = "0".repeat(keyLength - decodedMessageCRC.length()).concat(decodedMessageCRC);
+
+        if (!sentMsgCRC.equals(decodedMessageCRC)) {
+            for (int i = 0; i < sentMsg.length(); i++) {
+                errorPosition.add(i);
+            }
+        }
+
+        message.setErrorsPosition(errorPosition);
+    }
+
     private int computeCRC(String text) {
         int a = 0, b;
-        for (int i = 0; i < text.length(); i+=8) {
-            b = Integer.parseInt(text.substring(i, i+8),2) << 24;
+        for (int i = 0; i < text.length(); i += 8) {
+            b = Integer.parseInt(text.substring(i, i + 8), 2) << 24;
             for (int j = 8; j > 0; j--) {
 
                 if (((a ^ b) & (1 << 31)) >>> 31 == 1) {
@@ -66,8 +86,5 @@ public class CRC extends ErrorDetectionAlgorithm {
         return a >>> (32 - keyLength);
     }
 
-    @Override
-    public ArrayList<String> decodeMsg() {
-        return null;
-    }
+
 }

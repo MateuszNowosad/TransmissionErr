@@ -4,5 +4,5 @@ import java.util.ArrayList;
 
 public abstract class ErrorDetectionAlgorithm {
     abstract public void encodeMsg(Message message);
-    abstract public ArrayList<String> decodeMsg();
+    abstract public void decodeMsg(Message message);
 }

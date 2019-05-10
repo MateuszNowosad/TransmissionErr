@@ -21,7 +21,7 @@ public class Message {
     }
 
     public String getMessageInBinary(int correctBlockSize) {
-        return correctBinaryLength(correctBlockSize,messageInBinary);
+        return correctBinaryLength(correctBlockSize, messageInBinary);
     }
 
     public void setMessageInBinary(String messageInBinary) {
@@ -68,11 +68,11 @@ public class Message {
         this.errorsPosition = errorsPosition;
     }
 
-    public Message(String message, boolean isBinary){
-        this.message=message;
-        if(!isBinary){
+    public Message(String message, boolean isBinary) {
+        this.message = message;
+        if (!isBinary) {
             this.messageInBinary = stringToBinary(message);
-        }else this.messageInBinary=message;
+        } else this.messageInBinary = message;
     }
 
     private static String stringToBinary(String text) {
@@ -88,11 +88,11 @@ public class Message {
         return binary.toString();
     }
 
-    private static String correctBinaryLength(int correctBlockSize, String text ){
-        if(text.length()<correctBlockSize){
-            text= "0".repeat(correctBlockSize-text.length()).concat(text);
-        }else {
-            int validBlockLength =correctBlockSize-(text.length() % correctBlockSize);
+    private static String correctBinaryLength(int correctBlockSize, String text) {
+        if (text.length() < correctBlockSize) {
+            text = "0".repeat(correctBlockSize - text.length()).concat(text);
+        } else {
+            int validBlockLength = correctBlockSize - (text.length() % correctBlockSize);
             if (validBlockLength != 0) {
                 text = "0".repeat(validBlockLength).concat(text);
             }
@@ -100,15 +100,15 @@ public class Message {
         return text;
     }
 
-    public void sendMessage(){
+    public void sendMessage() {
         sentMessage = encodedMessage;
     }
 
-    public void sendMessage(int wrongBitAmount){
+    public void sendMessage(int wrongBitAmount) {
         Random generator = new Random();
-        Set<Integer> wrongBitsPositions=new LinkedHashSet<>();
+        Set<Integer> wrongBitsPositions = new LinkedHashSet<>();
 
-        while(wrongBitAmount>wrongBitsPositions.size()){
+        while (wrongBitAmount > wrongBitsPositions.size()) {
             Integer losowyNumer = generator.nextInt(messageInBinary.length());
             wrongBitsPositions.add(losowyNumer);
         }
@@ -116,11 +116,11 @@ public class Message {
         sendMessage(wrongBitsPositions);
     }
 
-    public void sendMessage(Set<Integer> wrongBitsPositions){
+    public void sendMessage(Set<Integer> wrongBitsPositions) {
         StringBuilder sentMessageSB = new StringBuilder(encodedMessage);
 
-        for(Integer wrongBitPosition: wrongBitsPositions){
-            sentMessageSB.replace(wrongBitPosition,wrongBitPosition+1, sentMessageSB.charAt(wrongBitPosition) == '0' ? "1":"0");
+        for (Integer wrongBitPosition : wrongBitsPositions) {
+            sentMessageSB.replace(wrongBitPosition, wrongBitPosition + 1, sentMessageSB.charAt(wrongBitPosition) == '0' ? "1" : "0");
         }
 
         sentMessage = sentMessageSB.toString();
