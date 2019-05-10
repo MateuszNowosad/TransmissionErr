@@ -100,5 +100,29 @@ public class Message {
         return text;
     }
 
+    public void sendMessage(){
+        sentMessage = encodedMessage;
+    }
 
+    public void sendMessage(int wrongBitAmount){
+        Random generator = new Random();
+        Set<Integer> wrongBitsPositions=new LinkedHashSet<>();
+
+        while(wrongBitAmount>wrongBitsPositions.size()){
+            Integer losowyNumer = generator.nextInt(messageInBinary.length());
+            wrongBitsPositions.add(losowyNumer);
+        }
+
+        sendMessage(wrongBitsPositions);
+    }
+
+    public void sendMessage(Set<Integer> wrongBitsPositions){
+        StringBuilder sentMessageSB = new StringBuilder(encodedMessage);
+
+        for(Integer wrongBitPosition: wrongBitsPositions){
+            sentMessageSB.replace(wrongBitPosition,wrongBitPosition+1, sentMessageSB.charAt(wrongBitPosition) == '0' ? "1":"0");
+        }
+
+        sentMessage = sentMessageSB.toString();
+    }
 }
