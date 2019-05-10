@@ -1,7 +1,6 @@
 package com.teleinfgroup.ErrorDetectionAlgorithms;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 public class Message {
 
@@ -93,7 +92,7 @@ public class Message {
         if(text.length()<correctBlockSize){
             text= "0".repeat(correctBlockSize-text.length()).concat(text);
         }else {
-            int validBlockLength = text.length() % correctBlockSize;
+            int validBlockLength =correctBlockSize-(text.length() % correctBlockSize);
             if (validBlockLength != 0) {
                 text = "0".repeat(validBlockLength).concat(text);
             }
