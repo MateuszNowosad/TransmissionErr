@@ -8,9 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class MainView {
@@ -30,6 +28,7 @@ public class MainView {
         CRCTypes.put("ATM", new CRCType("ATM", 0x7, 8));
     }
 
+    private static JFrame frame;
     private JPanel mainJPanel;
     private JTextField messageTextField;
     private JButton encode;
@@ -44,7 +43,7 @@ public class MainView {
     private JTextField bitsPositionsTextField;
     private JCheckBox randomPositionCheckBox;
     private JButton disturbAndDecode;
-    private JLabel disturbedMessage;
+    private JTextArea disturbedMessage;
     private JLabel correctedMessage;
     private JLabel decodedMessage;
     private JLabel disturbedBits;
@@ -130,9 +129,11 @@ public class MainView {
                     encode(message);
                     encodedMessage.setText(message.getEncodedMessage());
                 } else if (binary.isSelected() && isBinary(text)) {
-                    messageInBinary.setMessage(text);
-                    encode(messageInBinary);
-                    encodedMessage.setText(messageInBinary.getEncodedMessage());
+                    message = new Message(text, true);
+                    message.setMessage(text);
+                    encode(message);
+                    encodedMessageSt = message.getEncodedMessage();
+
                 }
                 enableChange(true);
             } catch (NullPointerException exception) {
@@ -144,22 +145,32 @@ public class MainView {
 
         disturbAndDecode.addActionListener(e -> {
             int bitsCount;
-            int[] bitsPositions;
+            Set<Integer> bitsPositions = new LinkedHashSet<>();
             String[] bitsPositionString;
             try {
                 if (!randomPositionCheckBox.isSelected() && bitsPositionsTextField.getText().isEmpty()) {
                     bitsPositionString = bitsPositionsTextField.getText().split(",");
-                    bitsPositions = new int[bitsPositionString.length];
-                    int i = 0;
                     for (String str : bitsPositionString) {
-                        bitsPositions[i] = Integer.parseInt(str);
-                        i++;
+                        bitsPositions.add(Integer.parseInt(str));
                     }
+                    message.sendMessage(bitsPositions);
                 } else if (!randomCountCheckBox.isSelected() && bitsCountTextField.getText().isEmpty()) {
                     bitsCount = Integer.parseInt(bitsCountTextField.getText());
+                    message.sendMessage(bitsCount);
                 } else {
-                    // random function
+                    message.sendMessage();
                 }
+
+                String sentMessageSt = message.getSentMessage();
+                disturbedMessage.setText("");
+                int signLength = frame.getWidth() - frame.getWidth()/4;
+                int first = 0, last = signLength;
+                while(last < sentMessageSt.length()){
+                    disturbedMessage.append(sentMessageSt.substring(first, last) + "\n");
+                    first += signLength;
+                    last += signLength;
+                }
+                disturbedMessage.append(sentMessageSt.substring(first) + "\n");
 
             } catch (NumberFormatException ex) {
 
