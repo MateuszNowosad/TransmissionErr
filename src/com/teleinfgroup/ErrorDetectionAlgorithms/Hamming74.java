@@ -32,7 +32,9 @@ public class Hamming74 extends ErrorDetectionAlgorithm {
                 j++;
             } else temp++;
         }
-        String controlBitsBinary = Integer.toBinaryString(controlBit);
+        StringBuilder controlBitsBinary = new StringBuilder(Integer.toBinaryString(controlBit));
+        controlBitsBinary.reverse();
+
         for(int i = 0; i < controlBitsAmount; i++ ){
             encodedMsg.insert((int)Math.pow(2,i)-1, i>=controlBitsBinary.length() ? '0': controlBitsBinary.charAt(i));
         }
