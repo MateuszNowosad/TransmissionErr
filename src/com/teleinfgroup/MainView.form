@@ -1,13 +1,317 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.teleinfgroup.MainView">
-  <grid id="27dc6" row-count="1" column-count="1" layout-manager="GridLayoutManager">
-    <margin top="0" left="0" bottom="0" right="0"/>
+  <grid id="27dc6" binding="mainJPanel" layout-manager="GridLayoutManager" row-count="16" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="500" height="400"/>
-      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+      <xy x="20" y="20" width="599" height="539"/>
     </constraints>
     <properties/>
     <border type="none"/>
-    <children/>
+    <children>
+      <component id="4eb79" class="javax.swing.JButton" binding="encode">
+        <constraints>
+          <grid row="3" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Encode"/>
+        </properties>
+      </component>
+      <component id="1df86" class="javax.swing.JTextField" binding="messageTextField">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="91dee" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Encoded message:"/>
+        </properties>
+      </component>
+      <component id="2bdae" class="javax.swing.JLabel" binding="encodedMessage">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <vspacer id="e56cb">
+        <constraints>
+          <grid row="15" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <component id="c25c3" class="javax.swing.JRadioButton" binding="CRCRadioButton">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <selected value="true"/>
+          <text value="CRC"/>
+        </properties>
+      </component>
+      <component id="a0fd5" class="javax.swing.JRadioButton" binding="hamming74RadioButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Hamming74"/>
+        </properties>
+      </component>
+      <component id="ce35f" class="javax.swing.JRadioButton" binding="parityControlRadioButton" default-binding="true">
+        <constraints>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="ParityControl"/>
+        </properties>
+      </component>
+      <component id="c76ca" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Message:"/>
+        </properties>
+      </component>
+      <component id="33715" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Disturbed bits count:"/>
+        </properties>
+      </component>
+      <component id="2909" class="javax.swing.JTextField" binding="bitsCountTextField">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <verifyInputWhenFocusTarget value="true"/>
+        </properties>
+      </component>
+      <component id="5c9b1" class="javax.swing.JCheckBox" binding="randomCountCheckBox">
+        <constraints>
+          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <selected value="true"/>
+          <text value="Random"/>
+        </properties>
+      </component>
+      <component id="67fcc" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Disturbed bits positions:"/>
+        </properties>
+      </component>
+      <component id="8effb" class="javax.swing.JTextField" binding="bitsPositionsTextField">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="a4f72" class="javax.swing.JCheckBox" binding="randomPositionCheckBox">
+        <constraints>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <selected value="true"/>
+          <text value="Random"/>
+        </properties>
+      </component>
+      <component id="8f5b3" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Disturbed message:"/>
+        </properties>
+      </component>
+      <component id="54161" class="javax.swing.JButton" binding="disturbAndDecode">
+        <constraints>
+          <grid row="7" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <text value="Disturb and decode"/>
+        </properties>
+      </component>
+      <component id="29cbb" class="javax.swing.JLabel" binding="disturbedMessage">
+        <constraints>
+          <grid row="8" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="fa4e0" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Corrected message:"/>
+        </properties>
+      </component>
+      <component id="416a5" class="javax.swing.JLabel" binding="correctedMessage">
+        <constraints>
+          <grid row="9" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="c478e" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Decoded message:"/>
+        </properties>
+      </component>
+      <component id="7d123" class="javax.swing.JLabel" binding="decodedMessage">
+        <constraints>
+          <grid row="10" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="101b" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Disturbed bits:"/>
+        </properties>
+      </component>
+      <component id="96650" class="javax.swing.JLabel" binding="disturbedBits">
+        <constraints>
+          <grid row="11" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="462b5" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Detected disturbed bits:"/>
+        </properties>
+      </component>
+      <component id="7147b" class="javax.swing.JLabel" binding="detectedBits">
+        <constraints>
+          <grid row="12" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="41bd4" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Corrected bits:"/>
+        </properties>
+      </component>
+      <component id="a9366" class="javax.swing.JLabel" binding="correctedBits">
+        <constraints>
+          <grid row="13" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="759a5" class="javax.swing.JLabel" binding="error">
+        <constraints>
+          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <foreground color="-4520442"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="8f717" class="javax.swing.JComboBox" binding="crcComboBox">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <model>
+            <item value="CRC-12"/>
+            <item value="CRC-16"/>
+            <item value="CRC-16-REVERSE"/>
+            <item value="CRC-32"/>
+            <item value="SDLC"/>
+            <item value="SDLC-REVERSE"/>
+            <item value="CRC-ITU"/>
+            <item value="ATM"/>
+          </model>
+        </properties>
+      </component>
+      <component id="47688" class="javax.swing.JButton" binding="generateMessage">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Generate message"/>
+        </properties>
+      </component>
+      <component id="b3390" class="javax.swing.JRadioButton" binding="binary">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <selected value="true"/>
+          <text value="Binary"/>
+        </properties>
+      </component>
+      <component id="be849" class="javax.swing.JRadioButton" binding="ASCI">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="ASCI"/>
+        </properties>
+      </component>
+      <component id="42ea0" class="javax.swing.JTextField" binding="messageLenght">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+    </children>
   </grid>
+  <buttonGroups>
+    <group name="radioButtonGroup">
+      <member id="b3390"/>
+      <member id="be849"/>
+    </group>
+    <group name="algorithm">
+      <member id="c25c3"/>
+      <member id="f90e2"/>
+      <member id="a0fd5"/>
+      <member id="ce35f"/>
+    </group>
+  </buttonGroups>
 </form>

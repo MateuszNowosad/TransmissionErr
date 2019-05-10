@@ -3,16 +3,14 @@ package com.teleinfgroup;
 import com.teleinfgroup.ErrorDetectionAlgorithms.*;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class Main {
 
-    private static Map<String, CRCType> CRCTypes = null;
+    private static Map<String, CRCType> CRCTypes=null;
 
-    private static void init() {
-        CRCTypes = new HashMap<>();
+    private static void init(){
+        CRCTypes=new HashMap<>();
         CRCTypes.put("CRC-12", new CRCType("CRC-12", 0x80f, 12));
         CRCTypes.put("CRC-16", new CRCType("CRC-16", 0x8005, 16));
         CRCTypes.put("CRC-16-REVERSE", new CRCType("CRC-16-REVERSE", 0x4003, 16));
@@ -23,59 +21,42 @@ public class Main {
         CRCTypes.put("ATM", new CRCType("ATM", 0x7, 8));
     }
 
-    public static void testAlgorithm(String name, ErrorDetectionAlgorithm algorithm, Message message, Message messageBinary) {
-        algorithm.encodeMsg(message);
-        algorithm.encodeMsg(messageBinary);
-
-        Set<Integer> set = new HashSet<>();
-        set.add(9);
-
-        message.sendMessage(set);
-        messageBinary.sendMessage(set);
-
-        algorithm.decodeMsg(message);
-        algorithm.decodeMsg(messageBinary);
-
-
-        System.out.println(name + " for " + message.getMessage());
-        System.out.println("----------------------------------");
-        System.out.println("Encoded: " + message.getEncodedMessage());
-        System.out.println("Sent: " + message.getSentMessage());
-        System.out.println("Decoded: " + message.getDecodedMessage());
-        System.out.println("Errors: " + message.getErrorsPosition());
-        System.out.println();
-        System.out.println(name + " for " + messageBinary.getMessage());
-        System.out.println("----------------------------------");
-        System.out.println("Encoded: " + messageBinary.getEncodedMessage());
-        System.out.println("Sent: " + messageBinary.getSentMessage());
-        System.out.println("Decoded: " + messageBinary.getDecodedMessage());
-        System.out.println("Error: " + messageBinary.getErrorsPosition());
-        System.out.println("----------------------------------");
-        System.out.println();
-    }
-
-
     public static void main(String[] args) {
         init();
-        Message message = new Message("abcd", false);
-        Message messageBinary = new Message("101010101011010101010101010101", true);
+        Message message = new Message("ab", false);
+        Message messageBinary = new Message("1011", true);
         /**
-         * Example usage
-         * Message message = new Message("ab", false);
-         * ErrorDetectionAlgorithm hamming = new Hamming74();
-         * System.out.println("Hamming74 for ab: "+message.getEncodedMessage());
+         * Wywołanie dla stringa ascii
+         * ErrorDetectionAlgorithm test = new Hamming74();
+         * System.out.println(hamming74.encodeMsg(correctBinaryLength(4,stringToBinary("ab"))));
+         *
+         * Wywołanie dla stringa binarnego
+         * ErrorDetectionAlgorithm test = new Hamming74();
+         * System.out.println(hamming74.encodeMsg(correctBinaryLength(4,"101")));
          */
-
         ErrorDetectionAlgorithm hamming74 = new Hamming74();
-        testAlgorithm("Hamming(7,4)", hamming74, message, messageBinary);
+        hamming74.encodeMsg(message);
+        hamming74.encodeMsg(messageBinary);
+        System.out.println("Hamming74 for ab: "+message.getEncodedMessage());
+        System.out.println("Hamming74 for 101: "+messageBinary.getEncodedMessage());
 
         ErrorDetectionAlgorithm CRC16 = new CRC(CRCTypes.get("CRC-16"));
-        testAlgorithm("CRC16", CRC16, message, messageBinary);
+        CRC16.encodeMsg(message);
+        CRC16.encodeMsg(messageBinary);
+        System.out.println("CRC16 for ab: "+message.getEncodedMessage());
+        System.out.println("CRC16 for 101: "+messageBinary.getEncodedMessage());
 
         ErrorDetectionAlgorithm CRC32 = new CRC(CRCTypes.get("CRC-32"));
-        testAlgorithm("CRC32", CRC32, message, messageBinary);
+        CRC32.encodeMsg(message);
+        CRC32.encodeMsg(messageBinary);
+        System.out.println("CRC32 for ab: "+message.getEncodedMessage());
+        System.out.println("CRC32 for 101: "+messageBinary.getEncodedMessage());
 
         ErrorDetectionAlgorithm Parity = new ParityControl();
-        testAlgorithm("Parity", Parity, message, messageBinary);
+        Parity.encodeMsg(message);
+        Parity.encodeMsg(messageBinary);
+
+        System.out.println("Parity for ab: "+message.getEncodedMessage());
+        System.out.println("Parity for 101: "+messageBinary.getEncodedMessage());
     }
 }
