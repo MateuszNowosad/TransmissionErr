@@ -4,8 +4,6 @@ import com.teleinfgroup.ErrorDetectionAlgorithms.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -34,7 +32,7 @@ public class MainView {
     private JButton encode;
     private JRadioButton ASCI;
     private JRadioButton binary;
-    private JLabel encodedMessage;
+    private JTextArea encodedMessage;
     private JRadioButton CRCRadioButton;
     private JRadioButton hamming74RadioButton;
     private JRadioButton parityControlRadioButton;
@@ -121,13 +119,16 @@ public class MainView {
         encode.addActionListener(e -> {
             String text = messageTextField.getText();
             encodedMessage.setForeground(Color.black);
-            message = new Message(text, false);
-            messageInBinary = new Message(text, true);
+            //message = new Message(text, false);
+            //messageInBinary = new Message(text, true);
+            String encodedMessageSt = "";
+            encodedMessage.setText("");
             try {
-                if (ASCI.isSelected() && isASCI(text)) {
+                if (ASCI.isSelected() && isASCII(text)) {
+                    message = new Message(text, false);
                     message.setMessage(text);
                     encode(message);
-                    encodedMessage.setText(message.getEncodedMessage());
+                    encodedMessageSt = message.getEncodedMessage();
                 } else if (binary.isSelected() && isBinary(text)) {
                     message = new Message(text, true);
                     message.setMessage(text);
@@ -135,6 +136,16 @@ public class MainView {
                     encodedMessageSt = message.getEncodedMessage();
 
                 }
+//                int signLength = 65;
+//                int first = 0, last = signLength;
+//                while(last < encodedMessageSt.length()){
+//                    encodedMessage.append(encodedMessageSt.substring(first, last) + "\n");
+//                    first += signLength;
+//                    last += signLength;
+//                }
+//                encodedMessage.append(encodedMessageSt.substring(first) + "\n");
+                encodedMessage.setText(encodedMessageSt);
+
                 enableChange(true);
             } catch (NullPointerException exception) {
                 enableChange(false);
@@ -258,14 +269,14 @@ public class MainView {
         }
     }
 
-
     public static void main(String[] args) {
         init();
-        JFrame frame = new JFrame("App");
+        frame = new JFrame("Transmission Errors");
         frame.setContentPane(new MainView().mainJPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        frame.setResizable(true);
     }
 
     public static boolean isBinary(String text) {
@@ -276,7 +287,7 @@ public class MainView {
         }
     }
 
-    public boolean isASCI(String name) {
+    public boolean isASCII(String name) {
         return name.matches("[a-zA-Z]+");
     }
 
