@@ -9,8 +9,9 @@ public class Message {
     private String encodedMessage;//
     private String decodedMessage;
     private String sentMessage;
+    private TreeSet<Integer> disturbedBitsPositions;
     private Map<Integer, Byte> redundantData;//
-    private ArrayList<Integer> errorsPosition;
+    private TreeSet<Integer> errorsPosition;
 
     public String getMessage() {
         return message;
@@ -60,11 +61,11 @@ public class Message {
         this.redundantData = redundantData;
     }
 
-    public ArrayList<Integer> getErrorsPosition() {
+    public TreeSet<Integer> getErrorsPosition() {
         return errorsPosition;
     }
 
-    public void setErrorsPosition(ArrayList<Integer> errorsPosition) {
+    public void setErrorsPosition(TreeSet<Integer> errorsPosition) {
         this.errorsPosition = errorsPosition;
     }
 
@@ -118,11 +119,20 @@ public class Message {
 
     public void sendMessage(Set<Integer> wrongBitsPositions) {
         StringBuilder sentMessageSB = new StringBuilder(encodedMessage);
+        disturbedBitsPositions = new TreeSet<>(wrongBitsPositions);
 
         for (Integer wrongBitPosition : wrongBitsPositions) {
             sentMessageSB.replace(wrongBitPosition, wrongBitPosition + 1, sentMessageSB.charAt(wrongBitPosition) == '0' ? "1" : "0");
         }
 
         sentMessage = sentMessageSB.toString();
+    }
+
+    public Set<Integer> getDisturbedBitsPositions() {
+        return disturbedBitsPositions;
+    }
+
+    public void setDisturbedBitsPositions(TreeSet<Integer> disturbedBitsPositions) {
+        this.disturbedBitsPositions = disturbedBitsPositions;
     }
 }

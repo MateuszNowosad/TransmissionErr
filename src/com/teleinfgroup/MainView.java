@@ -3,6 +3,7 @@ package com.teleinfgroup;
 import com.teleinfgroup.ErrorDetectionAlgorithms.*;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -13,6 +14,8 @@ public class MainView {
 
     private static Map<String, CRCType> CRCTypes = null;
     private static String chosenAlgorithm;
+    private static int disturbedBitsCounter;
+    private static boolean ifBitsPositions;
 
     private static void init() {
         CRCTypes = new HashMap<>();
@@ -30,7 +33,7 @@ public class MainView {
     private JPanel mainJPanel;
     private JTextArea messageTextField;
     private JButton encode;
-    private JRadioButton ASCI;
+    private JRadioButton ASCII;
     private JRadioButton binary;
     private JTextArea encodedMessage;
     private JRadioButton CRCRadioButton;
@@ -42,8 +45,8 @@ public class MainView {
     private JCheckBox randomPositionCheckBox;
     private JButton disturbAndDecode;
     private JTextArea disturbedMessage;
-    private JLabel correctedMessage;
-    private JLabel decodedMessage;
+    private JTextPane correctedMessage;
+    private JTextArea decodedMessage;
     private JLabel disturbedBits;
     private JLabel detectedBits;
     private JLabel correctedBits;
@@ -118,39 +121,34 @@ public class MainView {
 
         encode.addActionListener(e -> {
             String text = messageTextField.getText();
-            encodedMessage.setForeground(Color.black);
-            //message = new Message(text, false);
-            //messageInBinary = new Message(text, true);
+            messageTextField.setForeground(Color.black);
             String encodedMessageSt = "";
             encodedMessage.setText("");
             try {
-                if (ASCI.isSelected() && isASCII(text)) {
+                if (isASCII(text)) {
                     message = new Message(text, false);
                     message.setMessage(text);
                     encode(message);
                     encodedMessageSt = message.getEncodedMessage();
-                } else if (binary.isSelected() && isBinary(text)) {
+                    enableChange(true);
+                    encodedMessage.setText(encodedMessageSt);
+                } else if (isBinary(text)) {
                     message = new Message(text, true);
                     message.setMessage(text);
                     encode(message);
                     encodedMessageSt = message.getEncodedMessage();
-
+                    enableChange(true);
+                    encodedMessage.setText(encodedMessageSt);
+                } else {
+                    enableChange(false);
+                    messageTextField.setForeground(Color.red);
+                    messageTextField.setText("Error: incorrect message!");
                 }
-//                int signLength = 65;
-//                int first = 0, last = signLength;
-//                while(last < encodedMessageSt.length()){
-//                    encodedMessage.append(encodedMessageSt.substring(first, last) + "\n");
-//                    first += signLength;
-//                    last += signLength;
-//                }
-//                encodedMessage.append(encodedMessageSt.substring(first) + "\n");
-                encodedMessage.setText(encodedMessageSt);
 
-                enableChange(true);
             } catch (NullPointerException exception) {
                 enableChange(false);
-                encodedMessage.setForeground(Color.red);
-                encodedMessage.setText("Error: incorrect message!");
+                messageTextField.setForeground(Color.red);
+                messageTextField.setText("Error: incorrect message!");
             }
         });
 
@@ -159,34 +157,31 @@ public class MainView {
             Set<Integer> bitsPositions = new LinkedHashSet<>();
             String[] bitsPositionString;
             try {
-                if (!randomPositionCheckBox.isSelected() && bitsPositionsTextField.getText().isEmpty()) {
+                if (!randomPositionCheckBox.isSelected() && !bitsPositionsTextField.getText().isEmpty()) {
                     bitsPositionString = bitsPositionsTextField.getText().split(",");
                     for (String str : bitsPositionString) {
-                        bitsPositions.add(Integer.parseInt(str));
+                        if(!str.equals(""))
+                            bitsPositions.add(Integer.parseInt(str));
                     }
+                    disturbedBitsCounter = bitsPositions.size();
+                    ifBitsPositions = true;
                     message.sendMessage(bitsPositions);
-                } else if (!randomCountCheckBox.isSelected() && bitsCountTextField.getText().isEmpty()) {
+                } else if (!randomCountCheckBox.isSelected() && !bitsCountTextField.getText().isEmpty()) {
                     bitsCount = Integer.parseInt(bitsCountTextField.getText());
+                    ifBitsPositions = false;
+                    disturbedBitsCounter = bitsCount;
                     message.sendMessage(bitsCount);
                 } else {
+                    ifBitsPositions = false;
+                    disturbedBitsCounter = 0;
                     message.sendMessage();
                 }
                 decodeMessage();
-
-                String sentMessageSt = message.getSentMessage();
-                disturbedMessage.setText(sentMessageSt);
-                correctedMessage.setText(correctBits());
-//                int signLength = frame.getWidth() - frame.getWidth()/4;
-//                int first = 0, last = signLength;
-//                while(last < sentMessageSt.length()){
-//                    disturbedMessage.append(sentMessageSt.substring(first, last) + "\n");
-//                    first += signLength;
-//                    last += signLength;
-//                }
-//                disturbedMessage.append(sentMessageSt.substring(first) + "\n");
-
+                setTextFields();
             } catch (NumberFormatException ex) {
 
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
             }
         });
 
@@ -211,9 +206,9 @@ public class MainView {
         });
 
         generateMessage.addActionListener(e -> {
-            encodedMessage.setForeground(Color.black);
+            messageTextField.setForeground(Color.black);
             try {
-                if (ASCI.isSelected()) {
+                if (ASCII.isSelected()) {
                     messageTextField.setText(generateMessage(Integer.parseInt(messageLenght.getText()), false));
                 } else {
                     if (binary.isSelected()) {
@@ -221,17 +216,72 @@ public class MainView {
                     }
                 }
             } catch (NumberFormatException ex) {
-                encodedMessage.setForeground(Color.red);
-                encodedMessage.setText("Error: set message lenght!");
+                messageTextField.setForeground(Color.red);
+                messageTextField.setText("Error: set message length!");
             }
         });
+    }
+
+    private void setTextFields() throws BadLocationException {
+        disturbedMessage.setText( message.getSentMessage());
+        disturbedBits.setText(String.valueOf(disturbedBitsCounter));
+        correctedMessage.setText("");
+
+        Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+
+        Style red = correctedMessage.addStyle("red", def);
+        StyleConstants.setForeground(red, Color.red);
+
+        Style black = correctedMessage.addStyle("black", def);
+        StyleConstants.setForeground(black,Color.black);
+
+        Style green = correctedMessage.addStyle("green", def);
+        StyleConstants.setForeground(green, Color.green);
+
+        Document doc= correctedMessage.getDocument();
+
+        if(chosenAlgorithm.equals("Hamming74") ){
+
+            String correctedMessageSt = correctBits();
+            decodedMessage.setText(message.getDecodedMessage());
+            detectedBits.setText(String.valueOf(message.getErrorsPosition().size()));
+            int first = 0, last;
+
+            TreeSet<Integer> correctedBitsPositions = message.getErrorsPosition();
+
+            for(Integer i: message.getDisturbedBitsPositions()){
+                last = i;
+                doc.insertString(doc.getLength(),correctedMessageSt.substring(first, last),black);
+                if(correctedBitsPositions.contains(i)){
+                    doc.insertString(doc.getLength(),correctedMessageSt.substring(last, last+1),green);
+                } else {
+                    doc.insertString(doc.getLength(),correctedMessageSt.substring(last, last+1),red);
+                }
+                first = i+1;
+            }
+            doc.insertString(doc.getLength(),correctedMessageSt.substring(first),black);
+
+        } else {
+            detectedBits.setText("---------------------------");
+            int first = 0, last;
+            String messageSt = message.getSentMessage();
+
+            for(Integer i: message.getErrorsPosition()){
+                last = i;
+                doc.insertString(doc.getLength(),messageSt.substring(first, last),black);
+                doc.insertString(doc.getLength(),messageSt.substring(last, last+1),red);
+                first = i+1;
+            }
+            doc.insertString(doc.getLength(),messageSt.substring(first),black);
+            decodedMessage.setText(message.getDecodedMessage());
+        }
     }
 
     private String correctBits(){
         String encodedMessage = message.getEncodedMessage();
         StringBuilder stringBuilder = new StringBuilder(encodedMessage);
         for (int i:message.getErrorsPosition()) {
-            //stringBuilder
+            stringBuilder.replace(i, i+1,  stringBuilder.charAt(i) == '1' ? "0" : "1");
         }
         return stringBuilder.toString();
     }
