@@ -100,7 +100,7 @@ public class Message {
             text = "0".repeat(correctBlockSize - text.length()).concat(text);
         } else {
             int validBlockLength = correctBlockSize - (text.length() % correctBlockSize);
-            if (validBlockLength != 8) {
+            if (validBlockLength != correctBlockSize) {
                 text = "0".repeat(validBlockLength).concat(text);
             }
         }
