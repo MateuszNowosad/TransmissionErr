@@ -331,7 +331,10 @@
           <component id="5e3bc" class="javax.swing.JTextPane" binding="correctedMessage">
             <constraints/>
             <properties>
+              <contentType value="text/plain"/>
               <editable value="false"/>
+              <enabled value="true"/>
+              <font style="1"/>
               <minimumSize width="493" height="70"/>
               <preferredSize width="493" height="70"/>
               <text value=""/>

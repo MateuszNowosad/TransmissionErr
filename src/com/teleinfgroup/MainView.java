@@ -234,6 +234,13 @@ public class MainView {
         Style red = correctedMessage.addStyle("red", def);
         StyleConstants.setForeground(red, Color.red);
 
+        Style orange = correctedMessage.addStyle("orange", def);
+        StyleConstants.setForeground(orange, Color.orange);
+
+
+        Style purple = correctedMessage.addStyle("purple", def);
+        StyleConstants.setForeground(purple, new Color(128, 0, 128));
+
         Style black = correctedMessage.addStyle("black", def);
         StyleConstants.setForeground(black, Color.black);
 
@@ -243,7 +250,20 @@ public class MainView {
         Style blue = correctedMessage.addStyle("blue", def);
         StyleConstants.setForeground(blue, Color.blue);
 
+        Style cyan = correctedMessage.addStyle("cyan", def);
+        StyleConstants.setForeground(cyan, Color.cyan);
+
         Document doc = correctedMessage.getDocument();
+//
+//        int f = 0, l;
+//        String msg = message.getSentMessage();
+//
+//        for (Integer i : message.getRedundantDataPositions()) {
+//            l = i;
+//            doc.insertString(doc.getLength(), msg.substring(f, l), purple);
+//            f = i + 1;
+//        }
+        Style color;
 
         if (chosenAlgorithm.equals("Hamming74")) {
 
@@ -251,25 +271,53 @@ public class MainView {
             decodedMessage.setText(message.getDecodedMessage());
             int first = 0, last, detected = 0;
 
+
             TreeSet<Integer> correctedBitsPositions = message.getErrorsPosition();
+            TreeSet<Integer> disturbedBitsPositions = message.getDisturbedBitsPositions();
+            TreeSet<Integer> redundantDataPositions = message.getRedundantDataPositions();
 
             if (ifBitsDisturbed) {
-                for (Integer i : message.getDisturbedBitsPositions()) {
-                    last = i;
-                    doc.insertString(doc.getLength(), correctedMessageSt.substring(first, last), black);
-                    if (correctedBitsPositions.contains(i)) {
+                for (int i = 0; i < correctedMessageSt.length(); i++) {
+                    if (correctedBitsPositions.contains(i) && disturbedBitsPositions.contains(i) && redundantDataPositions.contains(i)) {
                         detected++;
-                        doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), green);
+                        color = cyan;
+                    } else if (correctedBitsPositions.contains(i) && disturbedBitsPositions.contains(i)) {
+                        detected++;
+                        color = green;
+                    } else if (disturbedBitsPositions.contains(i) && redundantDataPositions.contains(i)) {
+                        color = purple;
+                    } else if (disturbedBitsPositions.contains(i)) {
+                        color = red;
+                    } else if (redundantDataPositions.contains(i)) {
+                        color = blue;
                     } else {
-                        doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), red);
+                        color = black;
                     }
-                    first = i + 1;
+                    doc.insertString(doc.getLength(), correctedMessageSt.substring(i, i + 1), color);
                 }
+//                for (Integer i : message.getDisturbedBitsPositions()) {
+//                    last = i;
+//                    doc.insertString(doc.getLength(), correctedMessageSt.substring(first, last), black);
+//                    if (correctedBitsPositions.contains(i)) {
+//                        detected++;
+//                        doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), green);
+//                    } else {
+//                        doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), red);
+//                    }
+//                    first = i + 1;
+//                }
 
-
-                doc.insertString(doc.getLength(), correctedMessageSt.substring(first), black);
+//                doc.insertString(doc.getLength(), correctedMessageSt.substring(first), black);
             } else {
-                correctedMessage.setText(correctedMessageSt);
+                for (int i = 0; i < correctedMessageSt.length(); i++) {
+                    if (redundantDataPositions.contains(i)) {
+                        color = blue;
+                    } else {
+                        color = black;
+                    }
+                    doc.insertString(doc.getLength(), correctedMessageSt.substring(i, i + 1), color);
+                }
+//                correctedMessage.setText(correctedMessageSt);
             }
             detectedBits.setText(String.valueOf(detected));
 
@@ -279,19 +327,35 @@ public class MainView {
             int first = 0, last;
             String messageSt = message.getSentMessage();
 
-            for (Integer i : message.getErrorsPosition()) {
-                last = i;
-                doc.insertString(doc.getLength(), messageSt.substring(first, last), black);
-                doc.insertString(doc.getLength(), messageSt.substring(last, last + 1), red);
-                first = i + 1;
+            TreeSet<Integer> errorsBitsPositions = message.getErrorsPosition();
+            TreeSet<Integer> redundantDataPositions = message.getRedundantDataPositions();
+
+            for (int i = 0; i < messageSt.length(); i++) {
+                if (redundantDataPositions.contains(i) && errorsBitsPositions.contains(i)) {
+                    color = purple;
+                } else if (errorsBitsPositions.contains(i)) {
+                    color = red;
+                } else if (redundantDataPositions.contains(i)) {
+                    color = blue;
+                } else {
+                    color = black;
+                }
+                doc.insertString(doc.getLength(), messageSt.substring(i, i + 1), color);
             }
-            doc.insertString(doc.getLength(), messageSt.substring(first), black);
+//            for (Integer i : message.getErrorsPosition()) {
+//                last = i;
+//                doc.insertString(doc.getLength(), messageSt.substring(first, last), black);
+//                doc.insertString(doc.getLength(), messageSt.substring(last, last + 1), red);
+//                first = i + 1;
+//            }
+//            doc.insertString(doc.getLength(), messageSt.substring(first), black);
             decodedMessage.setText(message.getDecodedMessage());
         }
+
     }
 
     private String correctBits() {
-        String encodedMessage = message.getEncodedMessage();
+        String encodedMessage = message.getSentMessage();
         StringBuilder stringBuilder = new StringBuilder(encodedMessage);
         for (int i : message.getErrorsPosition()) {
             stringBuilder.replace(i, i + 1, stringBuilder.charAt(i) == '1' ? "0" : "1");

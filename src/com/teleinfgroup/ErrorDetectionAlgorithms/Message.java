@@ -134,7 +134,7 @@ public class Message {
         sentMessage = sentMessageSB.toString();
     }
 
-    public Set<Integer> getDisturbedBitsPositions() {
+    public TreeSet<Integer> getDisturbedBitsPositions() {
         return disturbedBitsPositions;
     }
 
