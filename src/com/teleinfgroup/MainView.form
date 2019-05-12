@@ -193,23 +193,14 @@
           <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value=""/>
+          <text value="Redundant data"/>
         </properties>
       </component>
-      <component id="a9366" class="javax.swing.JLabel" binding="correctedBits">
+      <component id="a9366" class="javax.swing.JLabel" binding="redundantData">
         <constraints>
           <grid row="13" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value=""/>
-        </properties>
-      </component>
-      <component id="759a5" class="javax.swing.JLabel" binding="error">
-        <constraints>
-          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <foreground color="-4520442"/>
           <text value=""/>
         </properties>
       </component>
@@ -367,6 +358,22 @@
           </component>
         </children>
       </scrollpane>
+      <component id="e76ad" class="javax.swing.JLabel" binding="realSentData">
+        <constraints>
+          <grid row="14" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="6a5bc" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="14" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Real sent data"/>
+        </properties>
+      </component>
     </children>
   </grid>
   <buttonGroups>

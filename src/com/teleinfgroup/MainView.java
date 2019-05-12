@@ -49,11 +49,11 @@ public class MainView {
     private JTextArea decodedMessage;
     private JLabel disturbedBits;
     private JLabel detectedBits;
-    private JLabel correctedBits;
-    private JLabel error;
+    private JLabel redundantData;
     private JComboBox crcComboBox;
     private JButton generateMessage;
     private JTextField messageLenght;
+    private JLabel realSentData;
     private ButtonGroup radioButtonGroup;
     private static Message message;
     private static Message messageInBinary;
@@ -226,6 +226,8 @@ public class MainView {
         disturbedMessage.setText( message.getSentMessage());
         disturbedBits.setText(String.valueOf(disturbedBitsCounter));
         correctedMessage.setText("");
+        realSentData.setText(String.valueOf(message.getDecodedMessage().length()));
+        redundantData.setText(String.valueOf(message.getRedundantDataPositions().size()));
 
         Style def = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
 
@@ -237,6 +239,9 @@ public class MainView {
 
         Style green = correctedMessage.addStyle("green", def);
         StyleConstants.setForeground(green, Color.green);
+
+        Style blue = correctedMessage.addStyle("blue", def);
+        StyleConstants.setForeground(blue,Color.blue);
 
         Document doc= correctedMessage.getDocument();
 
@@ -258,6 +263,11 @@ public class MainView {
                     } else {
                         doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), red);
                     }
+                    first = i + 1;
+                }
+                for(Integer i : message.getRedundantDataPositions()){
+                    last = i;
+                    doc.insertString(doc.getLength(), correctedMessageSt.substring(first, last), blue);
                     first = i + 1;
                 }
                 doc.insertString(doc.getLength(), correctedMessageSt.substring(first), black);
