@@ -15,7 +15,7 @@ public class MainView {
     private static Map<String, CRCType> CRCTypes = null;
     private static String chosenAlgorithm;
     private static int disturbedBitsCounter;
-    private static boolean ifBitsPositions;
+    private static boolean ifBitsDisturbed;
 
     private static void init() {
         CRCTypes = new HashMap<>();
@@ -164,15 +164,15 @@ public class MainView {
                             bitsPositions.add(Integer.parseInt(str));
                     }
                     disturbedBitsCounter = bitsPositions.size();
-                    ifBitsPositions = true;
+                    ifBitsDisturbed = true;
                     message.sendMessage(bitsPositions);
                 } else if (!randomCountCheckBox.isSelected() && !bitsCountTextField.getText().isEmpty()) {
                     bitsCount = Integer.parseInt(bitsCountTextField.getText());
-                    ifBitsPositions = false;
+                    ifBitsDisturbed = true;
                     disturbedBitsCounter = bitsCount;
                     message.sendMessage(bitsCount);
                 } else {
-                    ifBitsPositions = false;
+                    ifBitsDisturbed = false;
                     disturbedBitsCounter = 0;
                     message.sendMessage();
                 }
@@ -249,17 +249,21 @@ public class MainView {
 
             TreeSet<Integer> correctedBitsPositions = message.getErrorsPosition();
 
-            for(Integer i: message.getDisturbedBitsPositions()){
-                last = i;
-                doc.insertString(doc.getLength(),correctedMessageSt.substring(first, last),black);
-                if(correctedBitsPositions.contains(i)){
-                    doc.insertString(doc.getLength(),correctedMessageSt.substring(last, last+1),green);
-                } else {
-                    doc.insertString(doc.getLength(),correctedMessageSt.substring(last, last+1),red);
+            if(ifBitsDisturbed) {
+                for (Integer i : message.getDisturbedBitsPositions()) {
+                    last = i;
+                    doc.insertString(doc.getLength(), correctedMessageSt.substring(first, last), black);
+                    if (correctedBitsPositions.contains(i)) {
+                        doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), green);
+                    } else {
+                        doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), red);
+                    }
+                    first = i + 1;
                 }
-                first = i+1;
+                doc.insertString(doc.getLength(), correctedMessageSt.substring(first), black);
+            } else {
+                correctedMessage.setText(correctedMessageSt);
             }
-            doc.insertString(doc.getLength(),correctedMessageSt.substring(first),black);
 
         } else {
             detectedBits.setText("---------------------------");
