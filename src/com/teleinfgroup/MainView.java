@@ -160,7 +160,7 @@ public class MainView {
                 if (!randomPositionCheckBox.isSelected() && !bitsPositionsTextField.getText().isEmpty()) {
                     bitsPositionString = bitsPositionsTextField.getText().split(",");
                     for (String str : bitsPositionString) {
-                        if(!str.equals(""))
+                        if (!str.equals(""))
                             bitsPositions.add(Integer.parseInt(str));
                     }
                     disturbedBitsCounter = bitsPositions.size();
@@ -223,7 +223,7 @@ public class MainView {
     }
 
     private void setTextFields() throws BadLocationException {
-        disturbedMessage.setText( message.getSentMessage());
+        disturbedMessage.setText(message.getSentMessage());
         disturbedBits.setText(String.valueOf(disturbedBitsCounter));
         correctedMessage.setText("");
         realSentData.setText(String.valueOf(message.getDecodedMessage().length()));
@@ -235,73 +235,72 @@ public class MainView {
         StyleConstants.setForeground(red, Color.red);
 
         Style black = correctedMessage.addStyle("black", def);
-        StyleConstants.setForeground(black,Color.black);
+        StyleConstants.setForeground(black, Color.black);
 
         Style green = correctedMessage.addStyle("green", def);
         StyleConstants.setForeground(green, Color.green);
 
         Style blue = correctedMessage.addStyle("blue", def);
-        StyleConstants.setForeground(blue,Color.blue);
+        StyleConstants.setForeground(blue, Color.blue);
 
-        Document doc= correctedMessage.getDocument();
+        Document doc = correctedMessage.getDocument();
 
-        if(chosenAlgorithm.equals("Hamming74") ){
+        if (chosenAlgorithm.equals("Hamming74")) {
 
             String correctedMessageSt = correctBits();
             decodedMessage.setText(message.getDecodedMessage());
-            detectedBits.setText(String.valueOf(message.getErrorsPosition().size()));
-            int first = 0, last;
+            int first = 0, last, detected = 0;
 
             TreeSet<Integer> correctedBitsPositions = message.getErrorsPosition();
 
-            if(ifBitsDisturbed) {
+            if (ifBitsDisturbed) {
                 for (Integer i : message.getDisturbedBitsPositions()) {
                     last = i;
                     doc.insertString(doc.getLength(), correctedMessageSt.substring(first, last), black);
                     if (correctedBitsPositions.contains(i)) {
+                        detected++;
                         doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), green);
                     } else {
                         doc.insertString(doc.getLength(), correctedMessageSt.substring(last, last + 1), red);
                     }
                     first = i + 1;
                 }
-                for(Integer i : message.getRedundantDataPositions()){
-                    last = i;
-                    doc.insertString(doc.getLength(), correctedMessageSt.substring(first, last), blue);
-                    first = i + 1;
-                }
+
+
                 doc.insertString(doc.getLength(), correctedMessageSt.substring(first), black);
             } else {
                 correctedMessage.setText(correctedMessageSt);
             }
+            detectedBits.setText(String.valueOf(detected));
+
 
         } else {
             detectedBits.setText("---------------------------");
             int first = 0, last;
             String messageSt = message.getSentMessage();
 
-            for(Integer i: message.getErrorsPosition()){
+            for (Integer i : message.getErrorsPosition()) {
                 last = i;
-                doc.insertString(doc.getLength(),messageSt.substring(first, last),black);
-                doc.insertString(doc.getLength(),messageSt.substring(last, last+1),red);
-                first = i+1;
+                doc.insertString(doc.getLength(), messageSt.substring(first, last), black);
+                doc.insertString(doc.getLength(), messageSt.substring(last, last + 1), red);
+                first = i + 1;
             }
-            doc.insertString(doc.getLength(),messageSt.substring(first),black);
+            doc.insertString(doc.getLength(), messageSt.substring(first), black);
             decodedMessage.setText(message.getDecodedMessage());
         }
     }
 
-    private String correctBits(){
+    private String correctBits() {
         String encodedMessage = message.getEncodedMessage();
         StringBuilder stringBuilder = new StringBuilder(encodedMessage);
-        for (int i:message.getErrorsPosition()) {
-            stringBuilder.replace(i, i+1,  stringBuilder.charAt(i) == '1' ? "0" : "1");
+        for (int i : message.getErrorsPosition()) {
+            stringBuilder.replace(i, i + 1, stringBuilder.charAt(i) == '1' ? "0" : "1");
         }
         return stringBuilder.toString();
     }
 
-    private void decodeMessage(){
-        switch (chosenAlgorithm){
+    private void decodeMessage() {
+        switch (chosenAlgorithm) {
             case "Hamming74":
                 ErrorDetectionAlgorithm hamming74 = new Hamming74();
                 hamming74.decodeMsg(message);
