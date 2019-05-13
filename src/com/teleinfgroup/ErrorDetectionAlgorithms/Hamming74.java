@@ -75,7 +75,9 @@ public class Hamming74 extends ErrorDetectionAlgorithm {
                 }
             }
             if (xorResult != 0) {
-                errorPosition.add(7 - xorResult + i);
+                int errorPos = 7 - xorResult + i;
+                errorPosition.add(errorPos);
+                sentMsg.replace(errorPos,errorPos+1,sentMsg.charAt(errorPos) == '1' ? "0" :"1");
             }
         }
 
