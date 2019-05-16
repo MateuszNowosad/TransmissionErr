@@ -3,6 +3,7 @@ package com.teleinfgroup.ErrorDetectionAlgorithms;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class ParityControl extends ErrorDetectionAlgorithm {
 
@@ -30,7 +31,7 @@ public class ParityControl extends ErrorDetectionAlgorithm {
 
     @Override
     public void decodeMsg(Message message) {
-        ArrayList<Integer> errorPosition = new ArrayList<>();
+        TreeSet<Integer> errorPosition = new TreeSet<>();
 
         StringBuilder sentMsg = new StringBuilder(message.getSentMessage());
 

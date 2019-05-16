@@ -9,8 +9,9 @@ public class Message {
     private String encodedMessage;//
     private String decodedMessage;
     private String sentMessage;
+    private TreeSet<Integer> disturbedBitsPositions;
     private Map<Integer, Byte> redundantData;//
-    private ArrayList<Integer> errorsPosition;
+    private TreeSet<Integer> errorsPosition;
 
     public String getMessage() {
         return message;
@@ -60,11 +61,17 @@ public class Message {
         this.redundantData = redundantData;
     }
 
-    public ArrayList<Integer> getErrorsPosition() {
+    public TreeSet<Integer> getRedundantDataPositions() {
+        TreeSet<Integer> set = new TreeSet<>();
+        redundantData.forEach((key, value) -> set.add(key));
+        return set;
+    }
+
+    public TreeSet<Integer> getErrorsPosition() {
         return errorsPosition;
     }
 
-    public void setErrorsPosition(ArrayList<Integer> errorsPosition) {
+    public void setErrorsPosition(TreeSet<Integer> errorsPosition) {
         this.errorsPosition = errorsPosition;
     }
 
@@ -93,7 +100,7 @@ public class Message {
             text = "0".repeat(correctBlockSize - text.length()).concat(text);
         } else {
             int validBlockLength = correctBlockSize - (text.length() % correctBlockSize);
-            if (validBlockLength != 0) {
+            if (validBlockLength != correctBlockSize) {
                 text = "0".repeat(validBlockLength).concat(text);
             }
         }
@@ -118,11 +125,20 @@ public class Message {
 
     public void sendMessage(Set<Integer> wrongBitsPositions) {
         StringBuilder sentMessageSB = new StringBuilder(encodedMessage);
+        disturbedBitsPositions = new TreeSet<>(wrongBitsPositions);
 
         for (Integer wrongBitPosition : wrongBitsPositions) {
             sentMessageSB.replace(wrongBitPosition, wrongBitPosition + 1, sentMessageSB.charAt(wrongBitPosition) == '0' ? "1" : "0");
         }
 
         sentMessage = sentMessageSB.toString();
+    }
+
+    public TreeSet<Integer> getDisturbedBitsPositions() {
+        return disturbedBitsPositions;
+    }
+
+    public void setDisturbedBitsPositions(TreeSet<Integer> disturbedBitsPositions) {
+        this.disturbedBitsPositions = disturbedBitsPositions;
     }
 }

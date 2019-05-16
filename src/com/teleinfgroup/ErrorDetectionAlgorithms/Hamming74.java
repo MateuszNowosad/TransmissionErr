@@ -3,6 +3,7 @@ package com.teleinfgroup.ErrorDetectionAlgorithms;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 public class Hamming74 extends ErrorDetectionAlgorithm {
 
@@ -61,7 +62,7 @@ public class Hamming74 extends ErrorDetectionAlgorithm {
 
     @Override
     public void decodeMsg(Message message) {
-        ArrayList<Integer> errorPosition = new ArrayList<>();
+        TreeSet<Integer> errorPosition = new TreeSet<>();
 
         StringBuilder sentMsg = new StringBuilder(message.getSentMessage());
 
@@ -74,7 +75,9 @@ public class Hamming74 extends ErrorDetectionAlgorithm {
                 }
             }
             if (xorResult != 0) {
-                errorPosition.add(7 - xorResult + i);
+                int errorPos = 7 - xorResult + i;
+                errorPosition.add(errorPos);
+                sentMsg.replace(errorPos,errorPos+1,sentMsg.charAt(errorPos) == '1' ? "0" :"1");
             }
         }
 
