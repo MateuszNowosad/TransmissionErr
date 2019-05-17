@@ -1,6 +1,6 @@
 # TransmissionErr
 
-This program is a simple showcase of few error detetion algorithms. It can simulate bit errors during transmission and shows if chosen algorithm finds an error in the sent message.  
+This program is a simple showcase of few error detection algorithms. It can simulate bit errors during transmission and shows if the chosen algorithm finds an error in the sent message.  
   
 **The following algorithms were implemented:**  
 ● Cyclical Redundancy Check (CRC): CRC 12, CRC 16, CRC 16 REVERSE, CRC 32, SDLC, SDLC REVERSE, CRC-ITU, ATM.  
