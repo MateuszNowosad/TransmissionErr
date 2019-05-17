@@ -14,3 +14,19 @@ This program is a simple showcase of few error detection algorithms. It can simu
 ● Generation of disturbances.  
 ● Calculation of errors detected, corrected and not detected.  
 ● Calculating the amount of real data transmitted and redundant information.  
+
+## Bit color legend  
+**For CRC and parity:**  
+BLUE: Control bits  
+PURPLE: Wrong/uncertain control bits  
+BLACK: data bits  
+RED: Wrong/uncertain data bits  
+
+**For Hamming coding:"**  
+BLUE: Control bits  
+PURPLE: Wrong control bits  
+LIGHT BLUE: Detected wrong control bits  
+BLACK: data bits  
+RED: wrong data bits  
+GREEN: detected wrong data bits  
+
